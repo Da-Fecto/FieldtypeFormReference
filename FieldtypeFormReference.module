@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * Fieldtype Form Reference
+ * Field that stores a reference to a Form Builder form.
+ *
+ * Most code stolen, Thanks Apeisa!
+ *
+ * @author Martijn Geerts
+ *
+ * ProcessWire 2.x
+ * Copyright (C) 2011 by Ryan Cramer
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ *
+ * http://www.processwire.com
+ * http://www.ryancramer.com
+ *
+ */
+class FieldtypeFormReference extends Fieldtype {
+
+    public static function getModuleInfo() {
+        return array(
+            'title' => __('Form Reference'),
+            'summary' => __('Field that stores a reference to a Form Builder form.'),
+            'author' => 'Martijn Geerts',
+            'version' => '0.5.0',
+            'icon' => 'building',
+            );
+    }
+
+    public function sanitizeValue(Page $page, Field $field, $value) {
+        return trim($value);
+    }
+
+    public function ___wakeupValue(Page $page, Field $field, $value) {
+        return $value;
+    }
+
+    public function ___sleepValue(Page $page, Field $field, $value) {
+        return $value;
+    }
+
+    public function getInputfield(Page $page, Field $field) {
+        $inputfield = $this->modules->get('InputfieldSelect');
+        $inputfield->attr('name', $field->name);
+        foreach($this->forms as $formName) {
+            $form = $this->forms->get($formName);
+            $inputfield->addOption($formName, $formName);
+        }
+        return $inputfield;
+    }
+
+    public function getDatabaseSchema(Field $field) {
+        $schema = parent::getDatabaseSchema($field);
+        $schema['data'] = "varchar(255) NOT NULL default ''";
+        return $schema;
+    }
+
+    public function ___getConfigInputfields(Field $field) {
+        $inputfields = parent::___getConfigInputfields($field);
+        return $inputfields;
+    }
+
+    public function ___getCompatibleFieldtypes(Field $field) {
+        return null;
+    }
+}
