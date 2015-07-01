@@ -44,7 +44,6 @@ class FieldtypeFormReference extends Fieldtype {
         $inputfield = $this->modules->get('InputfieldSelect');
         $inputfield->attr('name', $field->name);
         foreach($this->forms as $formName) {
-            $form = $this->forms->get($formName);
             $inputfield->addOption($formName, $formName);
         }
         return $inputfield;
